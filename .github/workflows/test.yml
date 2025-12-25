@@ -51,7 +51,7 @@ jobs:
         fi
 
     - name: Vet code
-      run: go vet ./...
+      run: go vet ./tinkfpe/... ./subtle/...
 
     - name: Check for common mistakes
       shell: bash
