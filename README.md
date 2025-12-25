@@ -413,6 +413,12 @@ Contributions are welcome! Please ensure:
 
 This package is open source. See the main repository for license details.
 
+## Documentation
+
+- **[FPE Algorithm Guide](FPE_ALGORITHM.md)**: Simplified explanation of how FF1 works, with examples and step-by-step walkthroughs
+- **[NIST Compliance Review](REVIEW.md)**: Detailed compliance documentation with NIST SP 800-38G
+- **[Wycheproof Test Suite](WYCHEPROOF.md)**: Test suite documentation and structure
+
 ## References
 
 - [NIST SP 800-38G: Format-Preserving Encryption](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-38G.pdf)
