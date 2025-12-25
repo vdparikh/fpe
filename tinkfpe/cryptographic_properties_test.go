@@ -4,6 +4,7 @@ import (
 	cryptorand "crypto/rand"
 	"fmt"
 	"math/rand"
+	"sync"
 	"testing"
 	"time"
 
@@ -109,31 +110,60 @@ func TestCollisionResistance(t *testing.T) {
 
 	// Test with random inputs (more comprehensive)
 	t.Run("RandomInputs", func(t *testing.T) {
-		seen := make(map[string]bool)
+		// Track both plaintexts and ciphertexts to detect actual collisions
+		// A collision is when DIFFERENT plaintexts produce the SAME ciphertext
+		plaintextToCiphertext := make(map[string]string) // plaintext -> ciphertext
+		ciphertextToPlaintext := make(map[string]string) // ciphertext -> plaintext (for collision detection)
 		collisions := 0
 		numTests := 1000
+		seenPlaintexts := make(map[string]bool) // Track unique plaintexts
 
 		for i := 0; i < numTests; i++ {
 			// Generate random numeric string
 			plaintext := generateRandomNumericString(10)
+
+			// Skip if we've seen this exact plaintext before (deterministic encryption will produce same output)
+			if seenPlaintexts[plaintext] {
+				// This is expected - same input produces same output (deterministic)
+				// Verify it produces the same ciphertext as before
+				expectedCiphertext := plaintextToCiphertext[plaintext]
+				actualCiphertext, err := primitive.Tokenize(plaintext)
+				if err != nil {
+					t.Errorf("Failed to tokenize duplicate input: %v", err)
+					continue
+				}
+				if actualCiphertext != expectedCiphertext {
+					t.Errorf("Determinism violation: %s produced %s before, now produces %s",
+						plaintext, expectedCiphertext, actualCiphertext)
+				}
+				continue
+			}
+			seenPlaintexts[plaintext] = true
+
 			ciphertext, err := primitive.Tokenize(plaintext)
 			if err != nil {
 				t.Errorf("Failed to tokenize random input: %v", err)
 				continue
 			}
 
-			if seen[ciphertext] {
+			// Store the mapping
+			plaintextToCiphertext[plaintext] = ciphertext
+
+			// Check for actual collision: different plaintext producing same ciphertext
+			if existingPlaintext, exists := ciphertextToPlaintext[ciphertext]; exists {
+				// This is a real collision: two different plaintexts produce the same ciphertext
 				collisions++
-				t.Errorf("COLLISION DETECTED at iteration %d: %s produces %s (seen before)",
-					i, plaintext, ciphertext)
+				t.Errorf("COLLISION DETECTED: %s and %s both produce %s",
+					existingPlaintext, plaintext, ciphertext)
+			} else {
+				ciphertextToPlaintext[ciphertext] = plaintext
 			}
-			seen[ciphertext] = true
 		}
 
 		if collisions > 0 {
 			t.Errorf("Found %d collisions in %d random tests", collisions, numTests)
 		} else {
-			t.Logf("✓ Tested %d random inputs, no collisions detected", numTests)
+			t.Logf("✓ Tested %d unique random inputs, no collisions detected", len(seenPlaintexts))
 		}
 	})
 }
@@ -488,11 +518,23 @@ func TestDeterminism(t *testing.T) {
 
 // Helper functions
 
+var (
+	// Global RNG for test use to avoid seed collisions
+	testRNG      = rand.New(rand.NewSource(time.Now().UnixNano()))
+	testRNGMutex sync.Mutex
+)
+
 func generateRandomNumericString(length int) string {
-	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
+	testRNGMutex.Lock()
+	defer testRNGMutex.Unlock()
+
+	// Use a combination of time and random to ensure uniqueness
+	// Add some randomness to avoid collisions on fast systems
+	testRNG.Seed(time.Now().UnixNano() + int64(testRNG.Intn(1000000)))
+
 	b := make([]byte, length)
 	for i := range b {
-		b[i] = byte('0' + rng.Intn(10))
+		b[i] = byte('0' + testRNG.Intn(10))
 	}
 	return string(b)
 }
