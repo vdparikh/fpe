@@ -1,0 +1,421 @@
+{
+  "algorithm": "FF1",
+  "generatorVersion": "1.0",
+  "numberOfTests": 57,
+  "testGroups": [
+    {
+      "type": "ValidInput",
+      "tests": [
+        {
+          "tcId": 1,
+          "comment": "NIST Sample #1: AES-128, empty tweak, numeric",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "0123456789",
+          "ciphertext": "3047523683",
+          "result": "valid"
+        },
+        {
+          "tcId": 2,
+          "comment": "NIST Sample #2: AES-192, empty tweak",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C2B7E151628AED2A6",
+          "tweak": "",
+          "plaintext": "0123456789",
+          "ciphertext": "5336569521",
+          "result": "valid"
+        },
+        {
+          "tcId": 3,
+          "comment": "NIST Sample #3: AES-256, empty tweak",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "0123456789",
+          "ciphertext": "2449381452",
+          "result": "valid"
+        },
+        {
+          "tcId": 4,
+          "comment": "AES-128 with non-empty tweak",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "D8E7920AFA387A9E",
+          "plaintext": "0123456789",
+          "ciphertext": "0006787907",
+          "result": "valid"
+        },
+        {
+          "tcId": 5,
+          "comment": "AES-256 with alphanumeric input (radix 62)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+          "result": "valid"
+        },
+        {
+          "tcId": 6,
+          "comment": "AES-128 with long tweak (64 bytes)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "D8E7920AFA387A9ED8E7920AFA387A9ED8E7920AFA387A9ED8E7920AFA387A9ED8E7920AFA387A9ED8E7920AFA387A9ED8E7920AFA387A9ED8E7920AFA387A9E",
+          "plaintext": "0123456789",
+          "result": "valid"
+        },
+        {
+          "tcId": 7,
+          "comment": "AES-256 with uppercase only (radix 26)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+          "result": "valid"
+        },
+        {
+          "tcId": 8,
+          "comment": "AES-128 with lowercase only (radix 26)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "abcdefghijklmnopqrstuvwxyz",
+          "result": "valid"
+        }
+      ]
+    },
+    {
+      "type": "InvalidKey",
+      "tests": [
+        {
+          "tcId": 10,
+          "comment": "Key too short (8 bytes, minimum is 16)",
+          "key": "2B7E151628AED2A6",
+          "tweak": "",
+          "plaintext": "0123456789",
+          "result": "invalid"
+        },
+        {
+          "tcId": 11,
+          "comment": "Key too short (12 bytes)",
+          "key": "2B7E151628AED2A6ABF71588",
+          "tweak": "",
+          "plaintext": "0123456789",
+          "result": "invalid"
+        },
+        {
+          "tcId": 12,
+          "comment": "Empty key",
+          "key": "",
+          "tweak": "",
+          "plaintext": "0123456789",
+          "result": "invalid"
+        },
+        {
+          "tcId": 13,
+          "comment": "Key with invalid size (15 bytes, not 16/24/32)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F",
+          "tweak": "",
+          "plaintext": "0123456789",
+          "result": "invalid"
+        },
+        {
+          "tcId": 14,
+          "comment": "Key with invalid size (17 bytes, not 16/24/32)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C00",
+          "tweak": "",
+          "plaintext": "0123456789",
+          "result": "invalid"
+        }
+      ]
+    },
+    {
+      "type": "EdgeCase",
+      "tests": [
+        {
+          "tcId": 20,
+          "comment": "Single character input (n=1, u=0, v=1) - fails domain size check",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "0",
+          "result": "invalid"
+        },
+        {
+          "tcId": 21,
+          "comment": "Two character input (n=2, u=1, v=1) - fails domain size check (10^2=100 < 1000)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "01",
+          "result": "invalid"
+        },
+        {
+          "tcId": 22,
+          "comment": "Empty plaintext",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "",
+          "result": "valid"
+        },
+        {
+          "tcId": 23,
+          "comment": "Three character input (n=3, u=1, v=2)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "012",
+          "result": "valid"
+        },
+        {
+          "tcId": 24,
+          "comment": "Odd length input (5 characters)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "01234",
+          "result": "valid"
+        },
+        {
+          "tcId": 25,
+          "comment": "Even length input (6 characters)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "012345",
+          "result": "valid"
+        },
+        {
+          "tcId": 26,
+          "comment": "Long input (20 characters)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "01234567890123456789",
+          "result": "valid"
+        }
+      ]
+    },
+    {
+      "type": "FormatPreservation",
+      "tests": [
+        {
+          "tcId": 30,
+          "comment": "SSN format with hyphens",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "123-45-6789",
+          "result": "valid"
+        },
+        {
+          "tcId": 31,
+          "comment": "Email format with @ and dot",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "user@example.com",
+          "result": "valid"
+        },
+        {
+          "tcId": 32,
+          "comment": "Credit card format with hyphens",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "4532-1234-5678-9010",
+          "result": "valid"
+        },
+        {
+          "tcId": 33,
+          "comment": "Phone format with hyphens",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "555-123-4567",
+          "result": "valid"
+        },
+        {
+          "tcId": 34,
+          "comment": "Date format with hyphens",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "2024-03-15",
+          "result": "valid"
+        },
+        {
+          "tcId": 35,
+          "comment": "Time format with colons",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "14:30:45",
+          "result": "valid"
+        },
+        {
+          "tcId": 36,
+          "comment": "IP address format with dots",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "192.168.1.1",
+          "result": "valid"
+        },
+        {
+          "tcId": 37,
+          "comment": "UUID format with hyphens",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "550e8400-e29b-41d4-a716-446655440000",
+          "result": "valid"
+        }
+      ]
+    },
+    {
+      "type": "Determinism",
+      "tests": [
+        {
+          "tcId": 40,
+          "comment": "Same input should produce same output (deterministic)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "0123456789",
+          "ciphertext": "3047523683",
+          "result": "valid"
+        },
+        {
+          "tcId": 41,
+          "comment": "Different tweak should produce different output",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "D8E7920AFA387A9E",
+          "plaintext": "0123456789",
+          "ciphertext": "0006787907",
+          "result": "valid"
+        },
+        {
+          "tcId": 42,
+          "comment": "Different key should produce different output",
+          "key": "3C8F262739BFE3B7BC08269910D05D4D",
+          "tweak": "",
+          "plaintext": "0123456789",
+          "result": "valid"
+        },
+        {
+          "tcId": 43,
+          "comment": "Same key, same tweak, same plaintext = same ciphertext",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "746573742D747765616B",
+          "plaintext": "12345",
+          "result": "valid"
+        }
+      ]
+    },
+    {
+      "type": "RoundTrip",
+      "tests": [
+        {
+          "tcId": 50,
+          "comment": "Encrypt then decrypt should recover original",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "0123456789",
+          "result": "valid"
+        },
+        {
+          "tcId": 51,
+          "comment": "Multiple encrypt/decrypt cycles",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "123-45-6789",
+          "result": "valid"
+        },
+        {
+          "tcId": 52,
+          "comment": "Round-trip with format characters",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "user@example.com",
+          "result": "valid"
+        }
+      ]
+    },
+    {
+      "type": "BoundaryCondition",
+      "tests": [
+        {
+          "tcId": 60,
+          "comment": "Very short input (1 character) - may fail domain size check",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "A",
+          "result": "acceptable"
+        },
+        {
+          "tcId": 61,
+          "comment": "Very long input (50 characters)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "01234567890123456789012345678901234567890123456789",
+          "result": "valid"
+        },
+        {
+          "tcId": 62,
+          "comment": "Maximum practical radix (alphanumeric, 62)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+          "result": "valid"
+        },
+        {
+          "tcId": 63,
+          "comment": "Empty tweak (minimum tweak length)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "0123456789",
+          "result": "valid"
+        }
+      ]
+    },
+    {
+      "type": "InvalidDomainSize",
+      "tests": [
+        {
+          "tcId": 70,
+          "comment": "Domain too small: radix 2 (binary) with length 1 (domain size = 2^1 = 2)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "0",
+          "result": "invalid"
+        },
+        {
+          "tcId": 71,
+          "comment": "Domain too small: radix 10 with length 1 (domain size = 10^1 = 10)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "0",
+          "result": "invalid"
+        },
+        {
+          "tcId": 72,
+          "comment": "Domain too small: radix 10 with length 2 (domain size = 10^2 = 100)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "00",
+          "result": "invalid"
+        },
+        {
+          "tcId": 73,
+          "comment": "Domain too small: radix 26 (lowercase) with length 1 (domain size = 26^1 = 26)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "a",
+          "result": "invalid"
+        },
+        {
+          "tcId": 74,
+          "comment": "Domain too small: radix 36 (alphanumeric lowercase) with length 1 (domain size = 36^1 = 36)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "0",
+          "result": "invalid"
+        },
+        {
+          "tcId": 75,
+          "comment": "Domain too small: radix 62 (full alphanumeric) with length 1 (domain size = 62^1 = 62)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "0",
+          "result": "invalid"
+        },
+        {
+          "tcId": 76,
+          "comment": "Domain size exactly at minimum: radix 10 with length 3 (domain size = 10^3 = 1000)",
+          "key": "2B7E151628AED2A6ABF7158809CF4F3C",
+          "tweak": "",
+          "plaintext": "000",
+          "result": "valid"
+        }
+      ]
+    }
+  ]
+}

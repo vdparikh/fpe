@@ -1,9 +1,9 @@
 package fpe
 
-// separateFormatAndData separates format characters (hyphens, dots, etc.) from data characters.
+// SeparateFormatAndData separates format characters (hyphens, dots, etc.) from data characters.
 // Returns a format mask (true = format char, false = data char) and the data characters only.
 // Format characters include: hyphens (-), dots (.), colons (:), at signs (@), etc.
-func separateFormatAndData(s string) ([]bool, string) {
+func SeparateFormatAndData(s string) ([]bool, string) {
 	formatMask := make([]bool, len(s))
 	dataChars := make([]byte, 0, len(s))
 
@@ -24,8 +24,8 @@ func separateFormatAndData(s string) ([]bool, string) {
 	return formatMask, string(dataChars)
 }
 
-// reconstructWithFormat reconstructs a string with format characters in their original positions.
-func reconstructWithFormat(data string, formatMask []bool, original string) string {
+// ReconstructWithFormat reconstructs a string with format characters in their original positions.
+func ReconstructWithFormat(data string, formatMask []bool, original string) string {
 	result := make([]byte, len(formatMask))
 	dataIdx := 0
 
@@ -48,9 +48,9 @@ func reconstructWithFormat(data string, formatMask []bool, original string) stri
 	return string(result)
 }
 
-// determineAlphabet determines the alphabet (character set) from the plaintext.
+// DetermineAlphabet determines the alphabet (character set) from the plaintext.
 // Only considers alphanumeric characters (format chars are handled separately).
-func determineAlphabet(plaintext string) string {
+func DetermineAlphabet(plaintext string) string {
 	hasLetters := false
 	hasDigits := false
 
