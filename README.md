@@ -1,5 +1,7 @@
 # Format-Preserving Encryption (FPE) for Google Tink
 
+[![Test](https://github.com/vdparikh/fpe/actions/workflows/test.yml/badge.svg)](https://github.com/vdparikh/fpe/actions/workflows/test.yml)
+
 An **opinionated Google Tink implementation** of Format-Preserving Encryption (FPE) using the FF1 algorithm, as specified in NIST SP 800-38G.
 
 This package provides a first-class Tink primitive that integrates seamlessly with Tink's key management system, following Tink's design patterns and conventions.
